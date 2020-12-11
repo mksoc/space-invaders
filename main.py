@@ -14,6 +14,8 @@ icon = pygame.image.load('res/icon.png')
 pygame.display.set_icon(icon)
 
 player = space_invaders.Player('res/player.png', screen)
+enemy = space_invaders.Enemy('res/enemy.png', screen)
+bullet = space_invaders.Bullet('res/bullet.png', screen, player)
 
 # Game loop
 running = True
@@ -29,10 +31,14 @@ while running:
                 player.move(space_invaders.Direction.LEFT)
             if event.key == pygame.K_RIGHT:
                 player.move(space_invaders.Direction.RIGHT)
+            if event.key == pygame.K_SPACE:
+                bullet.fire()
         if event.type == pygame.KEYUP:
             player.stop()
 
     player.draw()
+    enemy.draw()
+    bullet.draw()
 
     pygame.display.update()
 
