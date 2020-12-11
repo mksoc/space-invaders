@@ -15,13 +15,21 @@ def is_collision(item1, item2):
     x2 = item2.x + item2.IMAGE_SIDE_LEN / 2
     y1 = item1.y + item1.IMAGE_SIDE_LEN / 2
     y2 = item2.y + item2.IMAGE_SIDE_LEN / 2
-    
+
     distance = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
     if distance < max([item1.IMAGE_SIDE_LEN, item2.IMAGE_SIDE_LEN]) / 2:
         return True
 
 def is_over(enemy, player):
     return abs(enemy.y - player.y) < enemy.IMAGE_SIDE_LEN
+
+def game_over(window):
+    font = pygame.font.Font('freesansbold.ttf', 64)
+    text = font.render("GAME OVER", True, (255, 255, 255))
+    window.blit(text, (200, 250))
+
+    for enemy in Enemy.register:
+        enemy.stop()
 
 
 class Direction(Enum):
@@ -110,9 +118,11 @@ class Player(BaseItem):
 class Enemy(BaseItem):
     STEP_X = 3
     STEP_Y = 40
+    register = []
 
     def __init__(self, picture, window):
         super().__init__(picture, window)
+        Enemy.register.append(self)
         self.spawn()
 
     @BaseItem.x.setter

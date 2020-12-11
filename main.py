@@ -60,7 +60,9 @@ while running:
             bullet.hit()
             enemy.hit()
             score_value += 1
-
+        if space_invaders.is_over(enemy, player):
+            space_invaders.game_over(screen)
+            break
 
     player.draw()
     for enemy in enemies:
