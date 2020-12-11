@@ -1,10 +1,23 @@
 from enum import Enum
 import random
+from math import sqrt
 from abc import ABC, abstractmethod
 import pygame
 
 width = 800
 height = 600
+
+
+def is_collision(item1, item2):
+    # Calculate center coordinates
+    x1 = item1.x + item1.IMAGE_SIDE_LEN / 2
+    x2 = item2.x + item2.IMAGE_SIDE_LEN / 2
+    y1 = item1.y + item1.IMAGE_SIDE_LEN / 2
+    y2 = item2.y + item2.IMAGE_SIDE_LEN / 2
+    
+    distance = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
+    if distance < max([item1.IMAGE_SIDE_LEN, item2.IMAGE_SIDE_LEN]) / 2:
+        return True
 
 
 class Direction(Enum):
@@ -132,7 +145,7 @@ class Bullet(BaseItem):
     def __init__(self, picture, window, player):
         super().__init__(picture, window)
         self._player = player
-        self._is_ready = True
+        self._firing = False
 
     @BaseItem.y.setter
     def y(self, value):
@@ -140,18 +153,27 @@ class Bullet(BaseItem):
         When bullet goes over the top, reset fire ready state.
         """
         if value <= 0:
-            self._y = -self.IMAGE_SIDE_LEN
             self.stop()
-            self._is_ready = True
+            self._firing = False
         else:
             self._y = value
 
     def move(self):
         self._speed_y = -self.STEP_Y
 
+    # Draw on screen only when fired
+    def draw(self):
+        if self._firing:
+            super().draw()
+
+    # Set direction based on player position and fire
     def fire(self):
-        if self._is_ready:
-            self._is_ready = False
+        if not self._firing:
+            self._firing = True
             self.x = self._player.x + (self._player.IMAGE_SIDE_LEN - self.IMAGE_SIDE_LEN) / 2
             self.y = self._player.y - self.IMAGE_SIDE_LEN
             self.move()
+
+    # Reset fired status when enemy is hit
+    def hit(self):
+        self._firing = False

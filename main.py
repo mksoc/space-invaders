@@ -16,6 +16,7 @@ pygame.display.set_icon(icon)
 player = space_invaders.Player('res/player.png', screen)
 enemy = space_invaders.Enemy('res/enemy.png', screen)
 bullet = space_invaders.Bullet('res/bullet.png', screen, player)
+score = 0
 
 # Game loop
 running = True
@@ -35,6 +36,11 @@ while running:
                 bullet.fire()
         if event.type == pygame.KEYUP:
             player.stop()
+
+    if space_invaders.is_collision(enemy, bullet):
+        bullet.hit()
+        score += 1
+
 
     player.draw()
     enemy.draw()
