@@ -13,10 +13,23 @@ pygame.display.set_caption('Space Invaders')
 icon = pygame.image.load('res/icon.png')
 pygame.display.set_icon(icon)
 
+# Create items
 player = space_invaders.Player('res/player.png', screen)
-enemy = space_invaders.Enemy('res/enemy.png', screen)
+num_of_enemies = 5
+enemies = []
+for i in range(num_of_enemies):
+    enemies.append(space_invaders.Enemy('res/enemy.png', screen))
 bullet = space_invaders.Bullet('res/bullet.png', screen, player)
-score = 0
+
+# Score
+score_value = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
+text_x = 10
+text_y = 10
+
+def show_score(x, y):
+    score = font.render(f'Score: {score_value}', True, (255, 255, 255))
+    screen.blit(score, (x, y))
 
 # Game loop
 running = True
@@ -37,14 +50,17 @@ while running:
         if event.type == pygame.KEYUP:
             player.stop()
 
-    if space_invaders.is_collision(enemy, bullet):
-        bullet.hit()
-        score += 1
+    for enemy in enemies:
+        if space_invaders.is_collision(enemy, bullet):
+            bullet.hit()
+            enemy.hit()
+            score_value += 1
 
 
     player.draw()
-    enemy.draw()
+    for enemy in enemies:
+        enemy.draw()
     bullet.draw()
+    show_score(text_x, text_y)
 
     pygame.display.update()
-

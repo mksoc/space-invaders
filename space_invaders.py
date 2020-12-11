@@ -109,9 +109,7 @@ class Enemy(BaseItem):
 
     def __init__(self, picture, window):
         super().__init__(picture, window)
-        self.x = random.randint(0, width - self.IMAGE_SIDE_LEN / 2)
-        self.y = random.randint(20, 150)
-        self.move(Direction(random.randint(2, 3)))
+        self.spawn()
 
     @BaseItem.x.setter
     def x(self, value):
@@ -137,9 +135,17 @@ class Enemy(BaseItem):
         elif direction == Direction.DOWN:
             self.y += self.STEP_Y
 
+    def spawn(self):
+        self.x = random.randint(0, width - self.IMAGE_SIDE_LEN / 2)
+        self.y = random.randint(20, 150)
+        self.move(Direction(random.randint(2, 3)))
+
+    def hit(self):
+        self.spawn()
+
 
 class Bullet(BaseItem):
-    STEP_Y = 10
+    STEP_Y = 15
     IMAGE_SIDE_LEN = 32
 
     def __init__(self, picture, window, player):
