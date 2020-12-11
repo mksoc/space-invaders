@@ -1,4 +1,5 @@
 import pygame
+from pygame import mixer
 import space_invaders
 
 # Initialize pygame
@@ -7,6 +8,10 @@ pygame.init()
 # Create the screen
 screen = pygame.display.set_mode((space_invaders.width, space_invaders.height))
 background = pygame.image.load('res/background.png')
+
+# Sound
+mixer.music.load('res/background.wav')
+mixer.music.play(-1) # Loop
 
 # Title and icon
 pygame.display.set_caption('Space Invaders')

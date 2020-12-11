@@ -3,6 +3,7 @@ import random
 from math import sqrt
 from abc import ABC, abstractmethod
 import pygame
+from pygame import mixer
 
 width = 800
 height = 600
@@ -18,6 +19,9 @@ def is_collision(item1, item2):
     distance = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
     if distance < max([item1.IMAGE_SIDE_LEN, item2.IMAGE_SIDE_LEN]) / 2:
         return True
+
+def is_over(enemy, player):
+    return abs(enemy.y - player.y) < enemy.IMAGE_SIDE_LEN
 
 
 class Direction(Enum):
@@ -174,6 +178,7 @@ class Bullet(BaseItem):
 
     # Set direction based on player position and fire
     def fire(self):
+        mixer.Sound('res/laser.wav').play()
         if not self._firing:
             self._firing = True
             self.x = self._player.x + (self._player.IMAGE_SIDE_LEN - self.IMAGE_SIDE_LEN) / 2
@@ -182,4 +187,6 @@ class Bullet(BaseItem):
 
     # Reset fired status when enemy is hit
     def hit(self):
+        if self._firing:
+            mixer.Sound('res/explosion.wav').play()
         self._firing = False
